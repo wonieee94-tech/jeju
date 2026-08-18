@@ -210,6 +210,8 @@ main{max-width:620px;margin:0 auto;padding:0 16px calc(92px + env(safe-area-inse
 .fld textarea{min-height:74px;resize:vertical}
 .f2{display:flex;gap:9px}.f2>*{flex:1}
 .savebtn{width:100%;margin-top:18px;padding:14px;border-radius:14px;border:0;background:var(--accent);color:#fff;font-size:15.5px;cursor:pointer;font-family:JuaX,NotoKRX,sans-serif}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);font-size:13.5px;padding:11px 18px;border-radius:999px;z-index:90;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+.toast.on{opacity:.95}
 .pickl{max-height:230px;overflow-y:auto;margin-top:6px;border:1px solid var(--line);border-radius:14px}
 .picki{display:flex;gap:10px;align-items:center;width:100%;border:0;background:none;padding:11px 13px;color:var(--ink);text-align:left;cursor:pointer;border-bottom:1px solid var(--line);font-size:14px}
 .picki:last-child{border-bottom:0}
@@ -317,6 +319,11 @@ main{max-width:620px;margin:0 auto;padding:0 16px calc(92px + env(safe-area-inse
   <button class="ditem" data-nav="v-cats"><span class="em">🍽️</span>종류별로 보기</button>
   <button class="ditem" data-nav="v-iti"><span class="em">🗓️</span>일정표</button>
   <button class="ditem" data-nav="v-fund"><span class="em">💰</span>곗돈현황</button>
+  <div class="dline"></div>
+  <div class="dsect">데이터</div>
+  <button class="ditem" id="expBtn"><span class="em">💾</span>백업 내보내기</button>
+  <button class="ditem" id="impBtn"><span class="em">📂</span>백업 불러오기</button>
+  <input type="file" id="impFile" accept="application/json,.json" style="display:none">
   <div class="dline"></div>
   <div class="dsect">지역</div>
   <div id="dRegions"></div>
@@ -442,7 +449,9 @@ var iti=lsGet(LS_ITI,{});
 var flight=lsGet(LS_FLIGHT,{from:'대구',to:'제주',pax:'성인 2 · 유아 1',
   out:{no:'7C711',date:'2026-09-06',dep:'08:10',arr:'09:15'},
   ret:{no:'7C706',date:'2026-09-08',dep:'17:50',arr:'18:55'}});
-var fund=lsGet(LS_FUND,{total:0,note:'',items:[]});
+var FUND_SEED={total:2530481,note:'',items:[{_k:'seed_rent',date:'2026-08-18',amt:244700,title:'제주 렌트비',memo:''}]};
+var fund=lsGet(LS_FUND,JSON.parse(JSON.stringify(FUND_SEED)));
+if(!localStorage.getItem(LS_FUND)) lsSet(LS_FUND,fund);
 fund.items=fund.items||[]; fund.items.forEach(function(x,i){ if(!x._k) x._k='f'+i+'_'+Math.random().toString(36).slice(2,7); });
 
 var state={view:'v-home',stack:[],region:null,area:'ALL',listCat:null,listTitle:'',sort:'r',day:1};
@@ -682,6 +691,36 @@ function saveEntry(){ var t=byId('eTitle').value.trim(); if(!t){ closeM('entryMo
   iti[k].push({_k:'i'+Date.now(),time:byId('eTime').value,title:t,memo:byId('eMemo').value.trim()});
   lsSet(LS_ITI,iti); closeM('entryModal'); render(); }
 
+/* ---------- backup ---------- */
+var KEYS=[LS_TRIP,LS_LIKED,LS_ITI,LS_FLIGHT,LS_FUND];
+var toastEl=null, toastT=null;
+function toast(msg){
+  if(!toastEl){ toastEl=document.createElement('div'); toastEl.className='toast'; document.body.appendChild(toastEl); }
+  toastEl.textContent=msg; toastEl.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(function(){ toastEl.classList.remove('on'); },2200);
+}
+function doExport(){
+  var data={_app:'jeju-map',_at:new Date().toISOString()};
+  KEYS.forEach(function(k){ var v=localStorage.getItem(k); if(v!=null) data[k]=JSON.parse(v); });
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download='제주도맛집_백업.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  closeD(); toast('백업 파일을 내려받았어요');
+}
+function doImport(file){
+  var r=new FileReader();
+  r.onload=function(){
+    try{
+      var d=JSON.parse(r.result); var n=0;
+      KEYS.forEach(function(k){ if(d[k]!=null){ localStorage.setItem(k,JSON.stringify(d[k])); n++; } });
+      if(!n){ toast('백업 내용을 찾지 못했어요'); return; }
+      location.reload();
+    }catch(e){ toast('백업 파일을 읽지 못했어요'); }
+  };
+  r.readAsText(file);
+}
+
 /* ---------- events ---------- */
 document.addEventListener('click',function(e){
   var t=e.target;
@@ -726,6 +765,8 @@ document.addEventListener('click',function(e){
   if(f('#fundSaveBtn')){ saveFund(); return; }
   if(f('#addFundBtn')){ openFundEntry(); return; }
   if(f('#fundEntrySaveBtn')){ saveFundEntry(); return; }
+  if(f('#expBtn')){ doExport(); return; }
+  if(f('#impBtn')){ byId('impFile').click(); return; }
   if(f('#addEntryBtn')){ openEntry(''); return; }
   if(f('#entrySaveBtn')){ saveEntry(); return; }
 
@@ -739,6 +780,10 @@ document.addEventListener('click',function(e){
   var df=f('[data-delfund]');
   if(df){ fund.items=fund.items.filter(function(x){return x._k!==df.getAttribute('data-delfund');}); lsSet(LS_FUND,fund); renderFund(); return; }
 },false);
+
+byId('impFile').addEventListener('change',function(e){
+  var fl=e.target.files&&e.target.files[0]; if(fl) doImport(fl); e.target.value='';
+});
 
 window.addEventListener('scroll',function(){ byId('hd').classList.toggle('stuck', window.scrollY>4); },{passive:true});
 
