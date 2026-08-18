@@ -170,16 +170,17 @@ main{max-width:620px;margin:0 auto;padding:0 16px calc(92px + env(safe-area-inse
 /* fund */
 .fundhero{margin-top:14px;border-radius:24px;padding:20px;background:linear-gradient(150deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 8px 26px rgba(200,64,47,.28)}
 .fundhero .fl{font-size:12px;opacity:.85;font-weight:700}
-.fundhero .fv{font-size:31px;margin-top:3px;letter-spacing:-.8px;font-family:JuaX,NotoKRX,sans-serif}
-.fundhero .fr{display:flex;gap:22px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.28)}
-.fundhero .fr b{display:block;font-size:15px;font-family:JuaX,NotoKRX,sans-serif;font-weight:400}
+.fundhero .fv{font-size:31px;margin-top:3px;letter-spacing:-.8px;font-family:JuaX,NotoKRX,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fundhero .fr{display:flex;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.28)}
+.fundhero .fr>div{flex:1 1 0;min-width:0}
+.fundhero .fr b{display:block;font-size:14px;font-family:JuaX,NotoKRX,sans-serif;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fundhero .fr span{font-size:10.5px;opacity:.82;font-weight:600}
 .frowit{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
 .frowit:last-child{border-bottom:0}
 .frowit .fi{flex:1;min-width:0}
-.frowit .fi b{display:block;font-size:14.5px;font-weight:700}
-.frowit .fi span{font-size:11.5px;color:var(--sub)}
-.frowit .fa{font-size:15px;font-family:JuaX,NotoKRX,sans-serif;flex:0 0 auto}
+.frowit .fi b{display:block;font-size:14.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frowit .fi span{display:block;font-size:11.5px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frowit .fa{font-size:15px;font-family:JuaX,NotoKRX,sans-serif;flex:0 0 auto;white-space:nowrap}
 .frowit .fx{border:0;background:none;color:var(--sub);opacity:.55;cursor:pointer;font-size:15px;padding:2px 0 2px 4px}
 
 /* itinerary */
@@ -189,7 +190,7 @@ main{max-width:620px;margin:0 auto;padding:0 16px calc(92px + env(safe-area-inse
 .dayt.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .tl{margin-top:14px}
 .tli{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh);margin-bottom:10px}
-.tlm{flex:0 0 auto;width:46px;color:var(--accent);font-size:13.5px;font-family:JuaX,NotoKRX,sans-serif;padding-top:1px}
+.tlm{flex:0 0 auto;width:52px;color:var(--accent);font-size:13.5px;font-family:JuaX,NotoKRX,sans-serif;padding-top:1px;white-space:nowrap}
 .tlb{flex:1;min-width:0}
 .tlt{font-size:15.5px;letter-spacing:-.2px}
 .tlb p{margin:3px 0 0;font-size:12.5px;color:var(--sub);line-height:1.5}
@@ -205,10 +206,11 @@ main{max-width:620px;margin:0 auto;padding:0 16px calc(92px + env(safe-area-inse
 .sheet h3{margin:0 0 4px;font-size:19px;font-family:JuaX,NotoKRX,sans-serif;font-weight:400}
 .fld{margin-top:13px}
 .fld label{display:block;font-size:12px;color:var(--sub);font-weight:700;margin-bottom:5px}
-.fld input,.fld textarea,.fld select{width:100%;padding:12px 13px;border-radius:13px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:15px}
+.fld input,.fld textarea,.fld select{width:100%;max-width:100%;min-width:0;padding:12px 13px;border-radius:13px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:16px;font-family:inherit;-webkit-appearance:none;appearance:none;box-sizing:border-box}
 .fld input:focus,.fld textarea:focus{outline:0;border-color:var(--accent)}
 .fld textarea{min-height:74px;resize:vertical}
-.f2{display:flex;gap:9px}.f2>*{flex:1}
+.f2{display:flex;gap:9px;flex-wrap:wrap}
+.f2>*{flex:1 1 132px;min-width:0}
 .savebtn{width:100%;margin-top:18px;padding:14px;border-radius:14px;border:0;background:var(--accent);color:#fff;font-size:15.5px;cursor:pointer;font-family:JuaX,NotoKRX,sans-serif}
 .toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);font-size:13.5px;padding:11px 18px;border-radius:999px;z-index:90;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 18px rgba(0,0,0,.25)}
 .toast.on{opacity:.95}
