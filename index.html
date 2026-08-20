@@ -470,7 +470,18 @@ function lsSet(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
 
 var trip=lsGet(LS_TRIP,{title:'세윤채운준우 제주도 여행',start:'2026-09-06',end:'2026-09-08',note:''});
 var liked=lsGet(LS_LIKED,[]);
-var iti=lsGet(LS_ITI,{});
+var ITI_SEED={d1:[
+  {_k:'s1a',time:'09:15',title:'제주공항',memo:'도착 · 렌트카 2대 수속 (카시트 미리 신청)'},
+  {_k:'s1b',time:'11:15',title:'당케올레국수',memo:'표선 · 첫 끼 · 보말죽으로 가볍게'},
+  {_k:'s1c',time:'12:30',title:'윈드1947 카트 테마파크',memo:'🏎️ 표선 · 아이 키·나이 제한 확인, 어린이는 2인승 동승'},
+  {_k:'s1d',time:'13:50',title:'목장카페 밭디',memo:'🎟️ 쿠폰 (아메리카노/아이스티) · 카트에서 5분 · 목장뷰'},
+  {_k:'s1e',time:'15:10',title:'네거리식당',memo:'점심 · 갈치 · 서귀포 · 10명 단체석 예약'},
+  {_k:'s1f',time:'16:30',title:'서귀포 매일올레시장',memo:'🎟️ 노란집(핸드크림) · 오또도넛 서귀점'},
+  {_k:'s1g',time:'17:20',title:'서머셋 제주신화월드',memo:'체크인 · 안덕'},
+  {_k:'s1h',time:'19:00',title:'궤네깃도 중문흑돼지 제주본점',memo:'🐷 저녁 · 숙소에서 15분 · 예약 필수'}
+]};
+var iti=lsGet(LS_ITI,JSON.parse(JSON.stringify(ITI_SEED)));
+if(!localStorage.getItem(LS_ITI)) lsSet(LS_ITI,iti);
 var flight=lsGet(LS_FLIGHT,{from:'대구',to:'제주',pax:'성인 2 · 유아 1',
   out:{no:'7C711',date:'2026-09-06',dep:'08:10',arr:'09:15'},
   ret:{no:'7C706',date:'2026-09-08',dep:'17:50',arr:'18:55'}});
