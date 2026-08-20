@@ -195,6 +195,10 @@ main{max-width:620px;margin:0 auto;padding:0 16px calc(92px + env(safe-area-inse
 .tlt{font-size:15.5px;letter-spacing:-.2px}
 .tlb p{margin:3px 0 0;font-size:12.5px;color:var(--sub);line-height:1.5}
 .tlx{border:0;background:none;color:var(--sub);opacity:.5;cursor:pointer;font-size:15px;padding:0 0 0 4px}
+.tlgo{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+.tlgo a{font-size:11.5px;font-weight:700;color:var(--accent);border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 11px;white-space:nowrap}
+.routebtn{display:block;box-sizing:border-box;width:100%;margin-top:12px;padding:13px;border-radius:16px;border:0;background:var(--accent);color:#fff;font-size:14px;text-align:center;cursor:pointer;font-family:JuaX,NotoKRX,sans-serif;box-shadow:var(--sh)}
+.routebtn.off{display:none}
 .addbtn{width:100%;margin-top:4px;padding:14px;border-radius:16px;border:1.5px dashed var(--line);background:none;color:var(--sub);font-size:14px;cursor:pointer;font-family:JuaX,NotoKRX,sans-serif}
 
 /* modal */
@@ -285,6 +289,7 @@ main{max-width:620px;margin:0 auto;padding:0 16px calc(92px + env(safe-area-inse
   <!-- ITINERARY -->
   <section class="view" id="v-iti">
     <div class="daytabs" id="dayTabs"></div>
+    <a class="routebtn" id="dayRouteBtn" target="_blank" rel="noopener">🗺️ 이 날 경로 한 번에 보기</a>
     <div class="tl" id="dayTl"></div>
     <button class="addbtn" id="addEntryBtn">+ 일정 추가하기</button>
   </section>
@@ -629,13 +634,35 @@ function renderIti(){
   for(var i=1;i<=dc;i++) h+='<button class="dayt'+(state.day===i?' on':'')+'" data-day="'+i+'">'+i+'일차</button>';
   byId('dayTabs').innerHTML=h;
   var arr=(iti['d'+state.day]||[]).slice().sort(function(a,b){return (a.time||'').localeCompare(b.time||'');});
-  if(!arr.length){ byId('dayTl').innerHTML='<div class="empty">아직 일정이 없어요.<br>아래 버튼으로 추가해 보세요.</div>'; return; }
+  if(!arr.length){ byId('dayTl').innerHTML='<div class="empty">아직 일정이 없어요.<br>아래 버튼으로 추가해 보세요.</div>'; renderRoute([]); return; }
   byId('dayTl').innerHTML=arr.map(function(it){
     return '<div class="tli"><div class="tlm">'+esc(it.time||'--:--')+'</div>'+
-      '<div class="tlb"><div class="tlt">'+esc(it.title)+'</div>'+(it.memo?'<p>'+esc(it.memo)+'</p>':'')+'</div>'+
+      '<div class="tlb"><div class="tlt">'+esc(it.title)+'</div>'+(it.memo?'<p>'+esc(it.memo)+'</p>':'')+
+        '<div class="tlgo">'+
+          '<a href="'+gmap(it.title)+'" target="_blank" rel="noopener">📍 지도</a>'+
+          '<a href="'+gdir(it.title)+'" target="_blank" rel="noopener">🚗 길찾기</a>'+
+        '</div>'+
+      '</div>'+
       '<button class="tlx" data-delit="'+it._k+'">✕</button></div>';
   }).join('');
+  renderRoute(arr);
 }
+function renderRoute(arr){
+  var btn=byId('dayRouteBtn');
+  if(!arr || arr.length<2){ btn.classList.add('off'); return; }
+  var pts=arr.map(function(x){ return '제주 '+x.title; });
+  if(pts.length>11) pts=pts.slice(0,11);          // 출발/도착 + 경유 9곳
+  var url='https://www.google.com/maps/dir/?api=1'+
+    '&origin='+encodeURIComponent(pts[0])+
+    '&destination='+encodeURIComponent(pts[pts.length-1]);
+  var mid=pts.slice(1,-1);
+  if(mid.length) url+='&waypoints='+mid.map(encodeURIComponent).join('%7C');
+  url+='&travelmode=driving';
+  btn.href=url;
+  btn.textContent='🗺️ 이 날 경로 한 번에 보기 ('+arr.length+'곳)';
+  btn.classList.remove('off');
+}
+
 function renderFund(){
   var sp=spentTotal(), tot=Number(fund.total)||0;
   byId('fundBal').textContent=won(tot-sp);
