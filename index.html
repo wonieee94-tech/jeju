@@ -343,7 +343,7 @@ main{max-width:620px;margin:0 auto;padding:0 16px calc(92px + env(safe-area-inse
   <button class="ditem" id="expBtn"><span class="em">💾</span>백업 내보내기</button>
   <button class="ditem" id="impBtn"><span class="em">📂</span>백업 불러오기</button>
   <input type="file" id="impFile" accept="application/json,.json" style="display:none">
-  <div style="padding:14px 20px 30px;font-size:11px;color:var(--sub);opacity:.7">버전 2026.08.19 · 1일차 일정 포함</div>
+  <div style="padding:14px 20px 30px;font-size:11px;color:var(--sub);opacity:.7">버전 2026.08.19-3 · 1일차 일정 포함</div>
 </aside>
 
 <nav id="tabs"><div class="tin">
@@ -487,13 +487,21 @@ var ITI_SEED={d1:[
   {_k:'s1h',time:'18:50',title:'궤네깃도 중문흑돼지 제주본점',memo:'🍽️ 3끼 · 흑돼지 · 해수욕장에서 5분 · 예약 필수'},
   {_k:'s1i',time:'20:20',title:'서머셋 제주신화월드',memo:'체크인 · 회 바로 냉장 보관'}
 ]};
+var SEED_VER='d1-v3';
 var iti=lsGet(LS_ITI,{});
 (function(){
+  var prev=null; try{ prev=localStorage.getItem('jeju_iti_seed'); }catch(e){}
   var changed=false;
   Object.keys(ITI_SEED).forEach(function(k){
-    if(!iti[k] || !iti[k].length){ iti[k]=JSON.parse(JSON.stringify(ITI_SEED[k])); changed=true; }
+    var cur=iti[k]||[];
+    // 사용자가 직접 넣은 일정(_k가 'i'로 시작)이 하나라도 있으면 건드리지 않음
+    var autoOnly=cur.every(function(x){ return x && x._k && x._k.charAt(0)==='s'; });
+    if(!cur.length || (autoOnly && prev!==SEED_VER)){
+      iti[k]=JSON.parse(JSON.stringify(ITI_SEED[k])); changed=true;
+    }
   });
   if(changed) lsSet(LS_ITI,iti);
+  try{ localStorage.setItem('jeju_iti_seed',SEED_VER); }catch(e){}
 })();
 var flight=lsGet(LS_FLIGHT,{from:'대구',to:'제주',pax:'성인 2 · 유아 1',
   out:{no:'7C711',date:'2026-09-06',dep:'08:10',arr:'09:15'},
