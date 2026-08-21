@@ -343,7 +343,7 @@ main{max-width:620px;margin:0 auto;padding:0 16px calc(92px + env(safe-area-inse
   <button class="ditem" id="expBtn"><span class="em">💾</span>백업 내보내기</button>
   <button class="ditem" id="impBtn"><span class="em">📂</span>백업 불러오기</button>
   <input type="file" id="impFile" accept="application/json,.json" style="display:none">
-  <div style="padding:14px 20px 30px;font-size:11px;color:var(--sub);opacity:.7">버전 2026.08.19-6 · 1일차 일정 포함</div>
+  <div style="padding:14px 20px 30px;font-size:11px;color:var(--sub);opacity:.7">버전 2026.08.19-7 · 1일차 일정 포함</div>
 </aside>
 
 <nav id="tabs"><div class="tin">
@@ -478,15 +478,16 @@ var trip=lsGet(LS_TRIP,{title:'세윤채운준우 제주도 여행',start:'2026-
 var liked=lsGet(LS_LIKED,[]);
 var ITI_SEED={d1:[
   {_k:'s1a',time:'09:15',title:'제주공항',memo:'도착 · 렌트카 2대 수속 (카시트 미리 신청) · 10:10 출발'},
-  {_k:'s1b',time:'10:20',title:'은희네해장국 본점',memo:'🍽️ 1끼 · 제주시 · 공항에서 7분 · 소고기해장국'},
-  {_k:'s1c',time:'12:00',title:'윈드1947카트 테마파크',memo:'🏎️ 서귀포 토평 · 40분 이동 · 아이 키·나이 제한 확인, 어린이는 2인승'},
-  {_k:'s1d',time:'13:30',title:'네거리식당',memo:'🍽️ 2끼 · 갈치 · 카트에서 9분 · 10명 단체석 예약'},
-  {_k:'s1e',time:'14:50',title:'서귀포 매일올레시장',memo:'🛍️ 회·야식 구입 — 식당에서 1분 · 보냉백+아이스팩 넉넉히 · 🎟️ 오또도넛·노란집'},
-  {_k:'s1f',time:'16:15',title:'중문색달해수욕장',memo:'🏖️ 물놀이 2시간 · 시장에서 24분 · 파도 있는 편이니 어른이 붙어서 · 샤워장 있음'},
-  {_k:'s1g',time:'18:10',title:'궤네깃도 중문흑돼지 제주본점',memo:'🍽️ 3끼 · 해수욕장에서 2분 · 예약 필수'},
-  {_k:'s1h',time:'19:45',title:'서머셋 제주신화월드',memo:'체크인 · 궤네깃도에서 16분 · 회 바로 냉장'}
+  {_k:'s1b',time:'10:15',title:'제주시 고기국수',memo:'🍜 1끼 · 공항에서 6분 · 국수문화거리 또는 공항 근처 고기국수 (아이들도 잘 먹음)'},
+  {_k:'s1c',time:'11:55',title:'협재해수욕장',memo:'🏖️ 물놀이 1시간 40분 · 수심 얕고 비양도 뷰 · 갈아입을 옷·수건·아쿠아슈즈'},
+  {_k:'s1d',time:'13:40',title:'협재수우동',memo:'🍜 2끼 · 해변에서 3분 · 웨이팅 있으니 한 명이 먼저 이름 올리기'},
+  {_k:'s1e',time:'15:00',title:'서머셋 제주신화월드',memo:'🛏️ 체크인 · 협재에서 21분 · 짐 풀고 샤워·휴식 (협재→서귀포 길목이라 손해 6분뿐)'},
+  {_k:'s1f',time:'16:25',title:'윈드1947카트 테마파크',memo:'🏎️ 서귀포 토평 · 숙소에서 42분 · ⚠️ 마감시간 미리 확인 · 아이 키·나이 제한 확인'},
+  {_k:'s1g',time:'17:50',title:'네거리식당',memo:'🍽️ 3끼 · 갈치 · 카트에서 9분 · 10명 단체석 예약'},
+  {_k:'s1h',time:'19:10',title:'서귀포 매일올레시장',memo:'🛍️ 회·야식 구입 · 식당에서 1분 · 숙소까지 40분이라 신선도 걱정 없음'},
+  {_k:'s1i',time:'19:50',title:'서머셋 제주신화월드',memo:'숙소 복귀 · 회 바로 냉장'}
 ]};
-var SEED_VER='d1-v6';
+var SEED_VER='d1-v7';
 var iti=lsGet(LS_ITI,{});
 (function(){
   var prev=null; try{ prev=localStorage.getItem('jeju_iti_seed'); }catch(e){}
